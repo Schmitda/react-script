@@ -1,0 +1,10 @@
+{
+  "name": "React_line",
+  "version": "1.0.0",
+  "scripts": {
+    "generate": "concurrently \"jflex grammars/Scanner.flex -d generated/ch/ffhs/ti/umk/skript/parser\" \"java -jar lib/java-cup-11a.jar -parser Parser -symbols Terminals -destdir generated/ch/ffhs/ti/umk/skript/parser grammars/Parser.cup\""
+  },
+  "devDependencies": {
+    "concurrently": "^6.2.0"
+  }
+}

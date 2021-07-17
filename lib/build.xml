@@ -1,0 +1,26 @@
+<?xml version="1.0" ?>
+
+<project default="main">
+	<taskdef name="jflex" classname="JFlex.anttask.JFlexTask" />
+
+	<taskdef name="cup" classname="java_cup.anttask.CUPTask" />
+	
+	<target name="main">
+		
+		<cup 
+			srcfile="${project_loc}/grammars/Parser.cup"
+		    destdir="${project_loc}/generated"
+		    interface="true"
+			parser="Parser"
+			symbols="Terminals"
+		/>
+
+		<jflex
+		    file="${project_loc}/grammars/Scanner.flex"
+		    destdir="${project_loc}/generated"
+		/>
+
+	    <eclipse.refreshLocal resource="${project_loc}/generated/" depth="infinite"/> 
+	</target>
+</project>
+

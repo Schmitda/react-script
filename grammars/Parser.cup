@@ -1,0 +1,130 @@
+package ch.ffhs.ti.umk.skript.parser;
+
+import java.util.ArrayList;
+import java_cup.runtime.*;
+import ch.ffhs.ti.umk.skript.instr.*;
+
+terminal TERMINATOR;
+terminal PLUS, MINUS, TIMES, DIV, MOD, POW;
+terminal ASSIGN, LPAR, RPAR, SEP, COMMA;
+terminal SWITCH, CASE_SYMBOL;
+terminal IF, ELSE, ELIF, WHILE, END_WHILE, ARR_START, ARR_END;
+terminal FUNC_EXPRESSION, QUESTION, DOUBLE_POINT, PRINT;
+
+
+terminal String NUMBER, FLOAT, ASSIGNMENT_OPERATION;
+terminal String EQUAL, GREATER_THAN, LOWER_THAN, GREATER_EQUAL, LOWER_EQUAL;
+terminal String NAME, STRING;
+terminal Boolean TRUE, FALSE;
+
+non terminal Instruction SCRIPT;
+non terminal ArrayList<Instruction> ASSIGNMENT_LIST;
+non terminal CaseManager CASE_STATEMENTS;
+non terminal WhileManager WHILE_LINE;
+non terminal ArrayBuilder ARRAY_TERM;
+non terminal Instruction ASSIGNMENT, CONTROL_STRUCTURE, CASE_STATEMENT;
+non terminal STATEMENT;
+non terminal Instruction IF_STATEMENT,IF_ELSE_STATEMENT, ELSE_STATEMENT, CONDITIONAL_STATEMENT, WHILE_STATEMENT, COMPARISON_OPERATOR, PRINT_STATEMENT;
+non terminal Instruction ARITHMETIC, PRODUCT, POWER, SIMPLE_TERM, BASIC_STATMENTS, VALUE_OR_VARIABLE, ARRAY_STATEMENT, REASSIGN_STATEMENT;
+non terminal CaseStatement CONDITIONAL_CASE_STATEMENT;
+non terminal Instruction NT_EQUAL;
+non terminal ENDE;
+
+precedence left PLUS, MINUS;
+precedence left MOD, TIMES;
+precedence left DIV, POW;
+precedence left IF, ELSE;
+precedence left WHILE, TERMINATOR;
+
+
+start with SCRIPT;
+      
+SCRIPT ::= ASSIGNMENT_LIST:al {: RESULT = new InstructionScript(al); :};
+               
+ASSIGNMENT_LIST ::= {:  RESULT = new ArrayList<Instruction>(); :}
+                    |  ASSIGNMENT_LIST:al ASSIGNMENT:a ENDE {:  RESULT = al; RESULT.add(a); :}
+                    |  ASSIGNMENT_LIST:al ARITHMETIC:a ENDE {:  RESULT = al; RESULT.add(a); :}
+                    |  ASSIGNMENT_LIST:al CONTROL_STRUCTURE:cs ENDE {: RESULT = al; RESULT.add(cs); :}
+                    |  ASSIGNMENT_LIST:al CASE_STATEMENT:cs ENDE {: RESULT = al; RESULT.add(cs); :}
+                    |  ASSIGNMENT_LIST:al PRINT_STATEMENT:cs ENDE {: RESULT = al; RESULT.add(cs); :}
+                    |  ASSIGNMENT_LIST:al WHILE_STATEMENT:cs ENDE {: RESULT = al; RESULT.add(cs); :}
+                    |  ASSIGNMENT_LIST:al REASSIGN_STATEMENT:ra ENDE {: RESULT = al; RESULT.add(ra); :};
+
+BASIC_STATMENTS ::= ARITHMETIC:a {: RESULT = a; :} |
+                    ASSIGNMENT:a {: RESULT = a; :} |
+                    REASSIGN_STATEMENT:a {: RESULT = a; :} |
+                    PRINT_STATEMENT:p {: RESULT = p; :};
+
+REASSIGN_STATEMENT ::=  NAME:n PLUS:p  ASSIGN ARITHMETIC:a  {: RESULT = new InstructionReassignment(n, a, p); :}
+                        | NAME:n MINUS:p  ASSIGN ARITHMETIC:a  {: RESULT = new InstructionReassignment(n, a, p); :}
+                        | NAME:n TIMES:p  ASSIGN ARITHMETIC:a  {: RESULT = new InstructionReassignment(n, a, p); :}
+                        | NAME:n MOD:p  ASSIGN ARITHMETIC:a  {: RESULT = new InstructionReassignment(n, a, p); :}
+                        | NAME:n DIV:p  ASSIGN ARITHMETIC:a  {: RESULT = new InstructionReassignment(n, a, p); :}
+                        | NAME:n POW:p  ASSIGN ARITHMETIC:a  {: RESULT = new InstructionReassignment(n, a, p); :};
+
+ASSIGNMENT_OPERATION ::= PLUS:p {: RESULT = p; :};
+
+PRINT_STATEMENT ::= PRINT LPAR BASIC_STATMENTS:bs RPAR {: RESULT = new InstructionPrint(bs); :};
+
+
+WHILE_STATEMENT ::= WHILE CONDITIONAL_STATEMENT:cs WHILE_LINE:term END_WHILE {: RESULT = new InstructionWhileStatement(cs, term); :};
+
+WHILE_LINE ::= {: RESULT = new WhileManager(); :}
+               | BASIC_STATMENTS:bs WHILE_LINE:wl {: RESULT = wl; RESULT.addStatement(bs); :};
+
+CONTROL_STRUCTURE ::= IF_STATEMENT:ifs {: RESULT = ifs; :}
+                    | IF_ELSE_STATEMENT:ie {: RESULT =  ie; :};
+
+IF_ELSE_STATEMENT ::= IF CONDITIONAL_STATEMENT:cs QUESTION BASIC_STATMENTS:bsif DOUBLE_POINT BASIC_STATMENTS:bselse {: RESULT = new InstructionIfElseStatement(cs, bsif, bselse); :};
+
+IF_STATEMENT ::= IF CONDITIONAL_STATEMENT:cs QUESTION BASIC_STATMENTS:bs {: RESULT = new InstructionIfStatement(cs, bs); :};
+
+CASE_STATEMENT ::=  SWITCH SIMPLE_TERM:st CASE_STATEMENTS:cases {: RESULT = new InstructionSwitchStatement(st, cases); :};
+
+CASE_STATEMENTS ::= {: RESULT = new CaseManager(); :}
+                    | CASE_SYMBOL CONDITIONAL_CASE_STATEMENT:rule BASIC_STATMENTS:cs CASE_STATEMENTS:cases {: RESULT = cases; RESULT.addCase(rule, cs); :};
+
+CONDITIONAL_CASE_STATEMENT ::= COMPARISON_OPERATOR:co SIMPLE_TERM:bs2 DOUBLE_POINT {: RESULT = new CaseStatement(co, bs2);  :};
+
+
+CONDITIONAL_STATEMENT ::= SIMPLE_TERM:bs1 COMPARISON_OPERATOR:co SIMPLE_TERM:bs2 {: RESULT = new InstructionConditionalStatement(co, bs1, bs2); :}
+                            | SIMPLE_TERM:term {: RESULT = new InstructionConditionalStatement(term); :};
+
+COMPARISON_OPERATOR ::= EQUAL:eq {: RESULT = InstructionConstant.asString(eq); :}
+                        | GREATER_THAN:eq {: RESULT = InstructionConstant.asString(eq); :}
+                        | LOWER_THAN:eq  {: RESULT = InstructionConstant.asString(eq); :}
+                        | GREATER_EQUAL:eq {: RESULT = InstructionConstant.asString(eq); :}
+                        | LOWER_EQUAL:eq {: RESULT = InstructionConstant.asString(eq); :};
+
+
+ASSIGNMENT ::= NAME:n ASSIGN ARITHMETIC:a {: RESULT = new InstructionSetVariable(n, a); :}
+                | NAME:n ASSIGN ARRAY_STATEMENT:a {: RESULT = new InstructionSetVariable(n, a); :};
+
+ARRAY_STATEMENT ::= ARR_START ARRAY_TERM:st ARR_END {: RESULT = new InstructionGetArray(st); :};
+
+ARRAY_TERM ::= {: RESULT = new ArrayBuilder(); :}
+                | SIMPLE_TERM:term ARRAY_TERM:at {: RESULT = at; RESULT.addElementToArray(term); :}
+                | SIMPLE_TERM:term COMMA ARRAY_TERM:at {: RESULT = at; RESULT.addElementToArray(term); :};
+       
+ARITHMETIC ::= PRODUCT:p {: RESULT = p; :}
+        |  MINUS PRODUCT:p {: RESULT = new InstructionNegate(p); :}
+        |  ARITHMETIC:a MINUS PRODUCT:p {: RESULT = new InstructionBinaryOperation(BinaryOperator.MINUS, a, p); :}
+        |  ARITHMETIC:a PLUS PRODUCT:p {: RESULT = new InstructionBinaryOperation(BinaryOperator.PLUS, a, p); :};
+     
+PRODUCT ::= POWER:pp {: RESULT = pp; :}
+         |  PRODUCT:p TIMES POWER:pp {: RESULT = new InstructionBinaryOperation(BinaryOperator.TIMES, p, pp); :}
+         |  PRODUCT:p DIV POWER:pp {: RESULT = new InstructionBinaryOperation(BinaryOperator.DIV, p, pp); :}
+         |  PRODUCT:p MOD POWER:pp {: RESULT = new InstructionBinaryOperation(BinaryOperator.MOD, p, pp); :};
+                    
+POWER ::= SIMPLE_TERM:st {: RESULT = st; :}
+        | SIMPLE_TERM:st POW POWER:pp {: RESULT = new InstructionBinaryOperation(BinaryOperator.POW, st, pp); :};
+        
+SIMPLE_TERM ::= NAME:n {: RESULT = new InstructionGetVariable(n); :}
+             |  NUMBER:n {: RESULT = InstructionConstant.asInt(n); :}
+             |  TRUE:t {: RESULT = InstructionConstant.asBool(true); :}
+             |  STRING:t {: RESULT = InstructionConstant.asString(t); :}
+             |  FALSE:f {: RESULT = InstructionConstant.asBool(false); :}
+             |  FLOAT:n {: RESULT = InstructionConstant.asFloat(n); :}
+             |  LPAR ARITHMETIC:s RPAR {: RESULT = s; :};
+
+ENDE ::=  |  SEP;
