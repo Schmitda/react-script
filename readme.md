@@ -96,10 +96,11 @@ Gegeben sei nachfolgende Code: <code> if 3 < 5 ? 3 * 5 : 12 * 4 -3 </code>
 
 Dieser kann wie folgt umgeschrieben werden:
 
-<code>
-if 3 < 5 \ <br>
-? 3 * 5 \ <br>
-: 12 * 4 - 3</code>
+```
+if 3 < 5 \ 
+? 3 * 5 \ 
+: 12 * 4 - 3
+```
 
 Anstelle von
 
@@ -137,10 +138,10 @@ Beispiel einer einfachen If-Struktur:
 
 Beispiel Multiline Statement: 
 
-<code>
-if 5 >= 3 \ <br>
-? 3 * 3 
-</code>
+```
+if 5 >= 3 \ 
+? 3 * 3
+``` 
 
 
 #### If - Else
@@ -148,19 +149,21 @@ IF - Else Statements werden auch unterstützt.
 
 Nachfolgend ein Multi-Line-Beispiel: 
 
-<code>
-if 3 < 5 \ <br>
-? 3 * 5 \ <br>
-: 12 * 4 - 3</code>
+```
+if 3 < 5 \ 
+? 3 * 5 \ 
+: 12 * 4 - 3
+```
 
 
 #### If - Else If - Else
 Else-If Statement per se werden nicht unterstützt. Diese können allerdings dennoch mit einem zusätzlichen If erreich werden. 
 
-<code>
-if 3 < 5 \ <br>
-? if 3 < 4 ? print("test") : print('failed') \ <br>
-: 12 * 4 - 3</code>
+```
+if 3 < 5 \ 
+? if 3 < 4 ? print("test") : print('failed') \ 
+: 12 * 4 - 3
+```
 
 
 #### While-Schleife
@@ -206,9 +209,10 @@ Syntax: print(STATEMENT)
 
 Beispiel:
 
-<code>a := 2 \ <br>
+```
+a := 2 \ <br>
 print(a)
-</code>
+```
 
 ### 🧮 Arithmetic
 
@@ -256,9 +260,11 @@ Variablen sind nur für eine Ausführung gültig. Bei einem Skript bleiben die V
 
 Variablen können mit einer speziellen Zeichenfolge mit Arithmetischen Operationen verbunden werden. 
 
-Syntax: <br> `` a:= 5  `` <br>
-``  a +:= 3 `` <br>
-`` print(a) --> 8 ``
+Syntax: <br> 
+``` a:= 5 
+ a +:= 3 
+ print(a) --> 8  
+ ```
 
 Folgende Zuweisungen sind möglich: 
 * `` *:=  `` Multiplikation
@@ -279,70 +285,72 @@ Der Umfang ist aktuell noch etwas limitiert doch wird mit Sicherheit erweitert w
 ### Testskript
 Nachfolgend der Inhalt des Testskriptes: 
 
-`` // Variable a erstellen und den Wert 5 zuweisen `` <br>
-``a := 5`` <br>
-``print("Value of a")`` <br>
-``print(a)`` <br>
-``// Variable um eins erhöhen`` <br>
-``a +:= 2 * 3`` <br>
-``print("Value of a")`` <br>
-``print(a)`` <br>
-``// Variable b auf den Wert von a setzen`` <br>
-``b := a`` <br>
-``print("Valur of b")`` <br>
-``print(b)`` <br>
-``print("Value of a")`` <br>
-``print(a)`` <br>
-``// Array c erstellen`` <br>
-``c := [1,2,false,true, "Hallo"]`` <br>
-``print("Value of c")`` <br>
-``print(c)`` <br>
-``// Kontrollstrukturen`` <br>
-``print("Resultat der Kontrollstruktur if 3 < 5 ? 3 * 5 : 12 * 4 -3")`` <br>
-``if 3 < 5 ? res := 3 * 5 : res := 12 * 4 -3`` <br>
-``print(res)`` <br>
-``// Switch - Case`` <br>
-``print("Resultat des Switch-Case Statemnets switch 5 case >= 5:  res:= 3 * 3 case >= 6: res :=  3 - 3")`` <br>
-``switch 5 case >= 5:  res:= 3 * 3 case >= 6: res :=  3 - 3`` <br>
-``print(res)`` <br>
-``// Beispiel Switch - Case Multiline`` <br>
-``print("Resultat des Switch-Case Statemnets switch 5 case >= 5:  res:= 3 * 3 case >= 6: res :=  3 - 3 (ALS MULTLINE-STATEMENT)")`` <br>
-``switch 5 \`` <br>
-``case >= 5:  res:= 3 * 3 \`` <br>
-``case >= 6: res := 3 - 3`` <br>
-``print(res)`` <br>
-``// Datentypen - Beispiele`` <br>
-``meinString := "Mein String"`` <br>
-``print("Beispiel String")`` <br>
-``print(meinString)`` <br>
-``meinStringSingleQuotes := "Mein String Single-Quote"`` <br>
-``// Float`` <br>
-``meinFloat := 1.42`` <br>
-``print(meinFloat)`` <br>
-``//  Negativer Float`` <br>
-``meinNegativerFloat := -1.42`` <br>
-``print(meinNegativerFloat)`` <br>
-``// Arithmetik`` <br>
-``print("3 * 3 = ")`` <br>
-``print(3 * 3)`` <br>
-``print("1 + 7 = ")`` <br>
-``print(1 + 7)`` <br>
-``print("3 - 12 = ")`` <br>
-``print(3 - 12)`` <br>
-``print("3^3 = ")`` <br>
-``print(3 ** 3)`` <br>
-``print("3 % 1 = ")`` <br>
-``print(3 % 1)`` <br>
-``print("1 / 3 = ")`` <br>
-``print(1 / 3)`` <br>
-``// While - Loop`` <br>
-``print ("Resultat der - While-Loop a := 5; while a < 10 +a:= 1 print(a) end")`` <br>
-``whileTest := 5`` <br>
-``while whileTest < 10 whileTest +:= 1 print(whileTest) end`` <br>
-``// Arithmetische zuweisung`` <br>
-``print("arithPlus := 5")`` <br>
-``print("arithPlus + := 5")`` <br>
-``print("Resultat von: arithPlus")`` <br>
-``arithPlus := 5`` <br>
-``arithPlus +:= 5`` <br>
-``print(arithPlus)`` <br> 
+```` 
+// Variable a erstellen und den Wert 5 zuweisen  
+a := 5 
+print("Value of a") 
+print(a) 
+// Variable um eins erhöhen 
+a +:= 2 * 3 
+print("Value of a") 
+print(a) 
+// Variable b auf den Wert von a setzen 
+b := a 
+print("Valur of b") 
+print(b) 
+print("Value of a") 
+print(a) 
+// Array c erstellen 
+c := [1,2,false,true, "Hallo"] 
+print("Value of c") 
+print(c) 
+// Kontrollstrukturen 
+print("Resultat der Kontrollstruktur if 3 < 5 ? 3 * 5 : 12 * 4 -3") 
+if 3 < 5 ? res := 3 * 5 : res := 12 * 4 -3 
+print(res) 
+// Switch - Case 
+print("Resultat des Switch-Case Statemnets switch 5 case >= 5:  res:= 3 * 3 case >= 6: res :=  3 - 3") 
+switch 5 case >= 5:  res:= 3 * 3 case >= 6: res :=  3 - 3 
+print(res) 
+// Beispiel Switch - Case Multiline 
+print("Resultat des Switch-Case Statemnets switch 5 case >= 5:  res:= 3 * 3 case >= 6: res :=  3 - 3 (ALS MULTLINE-STATEMENT)") 
+switch 5 \ 
+case >= 5:  res:= 3 * 3 \ 
+case >= 6: res := 3 - 3 
+print(res) 
+// Datentypen - Beispiele 
+meinString := "Mein String" 
+print("Beispiel String") 
+print(meinString) 
+meinStringSingleQuotes := "Mein String Single-Quote" 
+// Float 
+meinFloat := 1.42 
+print(meinFloat) 
+//  Negativer Float 
+meinNegativerFloat := -1.42 
+print(meinNegativerFloat) 
+// Arithmetik 
+print("3 * 3 = ") 
+print(3 * 3) 
+print("1 + 7 = ") 
+print(1 + 7) 
+print("3 - 12 = ") 
+print(3 - 12) 
+print("3^3 = ") 
+print(3 ** 3) 
+print("3 % 1 = ") 
+print(3 % 1) 
+print("1 / 3 = ") 
+print(1 / 3) 
+// While - Loop 
+print ("Resultat der - While-Loop a := 5; while a < 10 +a:= 1 print(a) end") 
+whileTest := 5 
+while whileTest < 10 whileTest +:= 1 print(whileTest) end 
+// Arithmetische zuweisung 
+print("arithPlus := 5") 
+print("arithPlus + := 5") 
+print("Resultat von: arithPlus") 
+arithPlus := 5 
+arithPlus +:= 5 
+print(arithPlus)
+```
